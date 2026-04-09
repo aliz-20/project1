@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block content %}
+<h1>Reviews</h1>
+
+<div class="guidelines-box">
+    <h3>Community Guidelines</h3>
+    <p>
+        Please be respectful when sharing your experience. Do not post harmful, offensive,
+        or inappropriate content.
+    </p>
+    <ul>
+        <li>No hate speech, racism, or discrimination</li>
+        <li>No harassment or bullying</li>
+        <li>No sexual or explicit content</li>
+        <li>Keep discussions respectful and relevant</li>
+    </ul>
+</div>
+
+{% for review in reviews %}
+<div class="review-card">
+    <h3>{{ review.title }}</h3>
+    <p><strong>{{ review.name }}</strong></p>
+
+    <p class="stars">
+        {% for i in "12345" %}
+            {% if forloop.counter <= review.stars %}★{% else %}☆{% endif %}
+        {% endfor %}
+    </p>
+
+    <p>{{ review.description }}</p>
+
+    {% if review.image %}
+        <img src="{{ review.image.url }}" alt="Review image">
+    {% endif %}
+
+    {% if review.video %}
+        <video controls>
+            <source src="{{ review.video.url }}">
+        </video>
+    {% endif %}
+
+    {% if user.is_authenticated and review.user == user %}
+    <div class="review-actions">
+        <a href="{% url 'review_edit' review.pk %}" class="edit-btn">Edit</a>
+        <a href="{% url 'review_delete' review.pk %}" class="delete-btn">Delete</a>
+    </div>
+    {% endif %}
+
+    <div class="replies-section">
+        <h4>Replies</h4>
+
+        {% for reply in review.replies.all %}
+            <div class="reply-card">
+                <p><strong>{{ reply.user.username }}</strong></p>
+                <p>{{ reply.message }}</p>
+                <small>{{ reply.created_at }}</small>
+
+                {% if user.is_authenticated and reply.user == user %}
+                <div class="reply-actions">
+                    <a href="{% url 'reply_edit' reply.pk %}" class="edit-btn">Edit</a>
+                    <a href="{% url 'reply_delete' reply.pk %}" class="delete-btn">Delete</a>
+                </div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No replies yet.</p>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'reply_create' review.pk %}" class="reply-form">
+            {% csrf_token %}
+            <textarea name="message" rows="3" placeholder="Write your reply..." required></textarea>
+
+            {% if reply_error_review_id == review.pk %}
+                {% for error in reply_form.message.errors %}
+                    <p style="color:#a32d2d; font-size:13px; margin:0;">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <button type="submit" class="btn-main">Reply</button>
+        </form>
+        {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to reply.</p>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<p>No reviews available yet.</p>
+{% endfor %}
+{% endblock %}

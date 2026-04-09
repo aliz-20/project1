@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Review{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="form-card">
+        <h1>Delete Review</h1>
+        <p>Are you sure you want to delete <strong>{{ review.title }}</strong>?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">Yes, delete it</button>
+            <a href="{% url 'review_list' %}" class="edit-btn">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}
