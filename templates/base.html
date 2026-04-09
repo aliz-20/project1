@@ -1,0 +1,851 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aivroll — People Against Poverty & War{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ── CSS Custom Properties ── */
+        :root {
+            --navy:      #1f3c88;
+            --navy-dark: #1a2e5a;
+            --navy-deep: #111e3c;
+            --gold:      #f5b301;
+            --gold-soft: #fcc93a;
+            --cream:     #f4f1ea;
+            --cream-mid: #ede9e0;
+            --cream-dark:#d8d0bc;
+            --white:     #ffffff;
+            --text:      #2a2a2a;
+            --text-mid:  #555560;
+            --text-light:#8a96aa;
+            --error:     #c0392b;
+            --shadow-sm: 0 2px 8px rgba(31,60,136,.07);
+            --shadow-md: 0 6px 24px rgba(31,60,136,.11);
+            --shadow-lg: 0 16px 48px rgba(31,60,136,.14);
+            --radius:    10px;
+            --transition: 0.2s cubic-bezier(.4,0,.2,1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        /* ── Base ── */
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Source Sans 3', Georgia, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Page load fade ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeUp .45s ease both;
+            animation-delay: .1s;
+        }
+
+        /* ══════════════════════════════
+           HEADER
+        ══════════════════════════════ */
+        .site-header {
+            background: var(--navy-deep);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle texture overlay */
+        .site-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 5% 50%, rgba(31,60,136,.55) 0%, transparent 70%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .header-inner {
+            position: relative;
+            width: min(1140px, 94%);
+            margin: 0 auto;
+            padding: 0;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 0;
+            min-height: 72px;
+        }
+
+        /* ── Branding ── */
+        .site-branding { padding: 14px 0; }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        /* Logo mark container */
+        .logo-mark {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fallback: if the static image fails, show SVG mark */
+        .site-logo {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 0.01em;
+            line-height: 1.1;
+        }
+
+        .site-tagline {
+            font-size: 9.5px;
+            color: var(--gold);
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* ── Navigation ── */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            padding: 0 24px;
+        }
+
+        nav a {
+            color: rgba(255,255,255,.65);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 16px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            transition: color var(--transition);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform var(--transition);
+            border-radius: 2px;
+        }
+
+        nav a:hover { color: var(--white); }
+        nav a:hover::after,
+        nav a.active::after { transform: scaleX(1); }
+        nav a.active { color: var(--gold); }
+
+        /* ── Header auth strip ── */
+        .header-auth {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 0 14px 28px;
+            border-left: 1px solid rgba(255,255,255,.1);
+        }
+
+        .header-auth span {
+            font-size: 13px;
+            color: rgba(255,255,255,.55);
+            white-space: nowrap;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,.22);
+            color: rgba(255,255,255,.7);
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: 'Source Sans 3', sans-serif;
+            padding: 6px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            transition: all var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,.1);
+            color: var(--white);
+            border-color: rgba(255,255,255,.45);
+        }
+
+        .nav-btn-cta {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--navy-deep) !important;
+        }
+
+        .nav-btn-cta:hover {
+            background: var(--gold-soft);
+            border-color: var(--gold-soft);
+            color: var(--navy-deep) !important;
+        }
+
+        .nav-link-plain {
+            color: rgba(255,255,255,.65);
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            transition: all var(--transition);
+            display: inline-block;
+        }
+
+        .nav-link-plain:hover {
+            color: var(--white);
+            background: rgba(255,255,255,.08);
+        }
+
+        /* ── Gold accent bar ── */
+        .accent-bar {
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--navy) 0%,
+                var(--navy) 35%,
+                var(--gold) 35%,
+                var(--gold) 65%,
+                var(--navy-dark) 65%,
+                var(--navy-dark) 100%
+            );
+        }
+
+        /* ══════════════════════════════
+           MAIN CONTAINER
+        ══════════════════════════════ */
+        .container {
+            width: min(1140px, 94%);
+            margin: 52px auto 100px;
+        }
+
+        /* ── Typography ── */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--navy-dark);
+            line-height: 1.2;
+            margin-top: 0;
+        }
+
+        h1 { font-size: clamp(28px, 4vw, 42px); margin-bottom: 16px; }
+        h2 { font-size: clamp(22px, 3vw, 32px); margin-bottom: 12px; }
+        h3 { font-size: clamp(18px, 2.5vw, 24px); margin-bottom: 8px; }
+
+        .page-eyebrow {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--navy);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        hr.rule {
+            border: none;
+            border-top: 1px solid var(--cream-dark);
+            margin: 36px 0;
+        }
+
+        section { margin-bottom: 60px; }
+
+        /* ══════════════════════════════
+           CARDS
+        ══════════════════════════════ */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--cream-dark);
+            border-radius: var(--radius);
+            padding: 30px 32px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--navy) 0%, #3a5abf 100%);
+        }
+
+        /* ── Review cards ── */
+        .review-card {
+            background: var(--white);
+            border: 1px solid var(--cream-dark);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition), transform var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--gold) 100%);
+            border-radius: 2px 0 0 2px;
+        }
+
+        .review-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .review-card h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--navy-dark);
+            font-size: 19px;
+            margin: 0 0 6px;
+        }
+
+        .review-card img,
+        .review-card video {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        /* ── Reply cards ── */
+        .replies-section {
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 1px solid var(--cream-mid);
+        }
+
+        .replies-section h4 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 14px;
+            color: var(--text-mid);
+            margin: 0 0 14px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .reply-card {
+            background: var(--cream);
+            border: 1px solid var(--cream-dark);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            transition: border-color var(--transition);
+        }
+
+        .reply-card:hover { border-color: var(--navy); }
+
+        .reply-card p { margin: 0 0 4px; font-size: 14.5px; color: var(--text); }
+        .reply-card small { font-size: 12px; color: var(--text-light); }
+
+        .reply-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .reply-form {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .reply-form textarea {
+            padding: 10px 14px;
+            border: 1.5px solid var(--cream-dark);
+            border-radius: 8px;
+            font-size: 14.5px;
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--white);
+            resize: vertical;
+            min-height: 90px;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            color: var(--text);
+        }
+
+        .reply-form textarea:focus {
+            outline: none;
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(31,60,136,.1);
+        }
+
+        /* ── Stars ── */
+        .stars {
+            color: var(--gold);
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        /* ══════════════════════════════
+           BUTTONS
+        ══════════════════════════════ */
+        .btn, .btn-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--navy);
+            color: var(--white);
+            padding: 10px 22px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Source Sans 3', sans-serif;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 2px 0 rgba(0,0,0,.15);
+        }
+
+        .btn:hover, .btn-main:hover {
+            background: var(--navy-dark);
+            border-color: var(--navy-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31,60,136,.3);
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--navy-deep);
+            border-color: var(--gold);
+        }
+
+        .btn-gold:hover {
+            background: var(--gold-soft);
+            border-color: var(--gold-soft);
+            color: var(--navy-deep);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--navy);
+            border-color: var(--navy);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            border-color: var(--error);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #a93226;
+            border-color: #a93226;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 11.5px;
+        }
+
+        /* ── Meta / badge strip ── */
+        .meta-strip {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 12.5px;
+            color: var(--text-light);
+            margin-bottom: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--cream-mid);
+            border: 1px solid var(--cream-dark);
+            border-radius: 4px;
+            padding: 2px 9px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--navy);
+        }
+
+        /* ── Blockquote ── */
+        blockquote.accent {
+            border: none;
+            border-left: 3px solid var(--gold);
+            background: linear-gradient(135deg, rgba(245,179,1,.05) 0%, rgba(31,60,136,.04) 100%);
+            margin: 28px 0;
+            padding: 20px 26px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 18px;
+            font-style: italic;
+            color: var(--navy-dark);
+            line-height: 1.55;
+        }
+
+        blockquote.accent cite {
+            display: block;
+            margin-top: 10px;
+            color: var(--text-light);
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-style: normal;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        /* ══════════════════════════════
+           FORMS — AUTH & EDIT
+        ══════════════════════════════ */
+        .auth-section,
+        .form-section {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0 80px;
+        }
+
+        .auth-card,
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--cream-dark);
+            border-radius: var(--radius);
+            padding: 44px 48px 48px;
+            width: 100%;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card  { max-width: 440px; }
+        .form-card  { max-width: 580px; }
+
+        .auth-card::before,
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--navy) 60%, var(--gold) 100%);
+        }
+
+        .auth-card h1,
+        .form-card h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--navy-dark);
+            font-size: 28px;
+            margin: 0 0 28px;
+            line-height: 1.15;
+        }
+
+        .form-card p {
+            color: var(--text-mid);
+            margin: 0 0 24px;
+            font-size: 15px;
+        }
+
+        .auth-card form p,
+        .form-card form p { margin: 0 0 18px; }
+
+        .auth-card form label,
+        .form-card form label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--navy);
+            margin-bottom: 7px;
+        }
+
+        .auth-card form input,
+        .form-card form input[type="text"],
+        .form-card form input[type="email"],
+        .form-card form select,
+        .form-card form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--cream-dark);
+            border-radius: 7px;
+            font-size: 15px;
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .auth-card form input:focus,
+        .form-card form input:focus,
+        .form-card form select:focus,
+        .form-card form textarea:focus {
+            outline: none;
+            border-color: var(--navy);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(31,60,136,.1);
+        }
+
+        .form-card form textarea { resize: vertical; min-height: 110px; }
+
+        .auth-card form ul.errorlist,
+        .form-card form ul.errorlist {
+            list-style: none;
+            margin: 5px 0 0;
+            padding: 0;
+        }
+
+        .auth-card form ul.errorlist li,
+        .form-card form ul.errorlist li {
+            font-size: 13px;
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .form-card .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid var(--cream-mid);
+        }
+
+        /* ── Guidelines box ── */
+        .guidelines-box {
+            background: #fff8f8;
+            border: 1px solid #f0b8b8;
+            border-left: 4px solid var(--error);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 28px;
+        }
+
+        .guidelines-box h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+            color: var(--navy-dark);
+        }
+
+        .guidelines-box p {
+            margin: 0 0 10px;
+            font-size: 14.5px;
+        }
+
+        .guidelines-box ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14.5px;
+        }
+
+        /* ── Images & video ── */
+        img, video {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: block;
+        }
+
+        /* ══════════════════════════════
+           FOOTER
+        ══════════════════════════════ */
+        .site-footer {
+            background: var(--navy-deep);
+            border-top: 4px solid var(--gold);
+            padding: 36px 24px;
+        }
+
+        .footer-inner {
+            width: min(1140px, 94%);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: rgba(255,255,255,.55);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .footer-brand strong {
+            color: rgba(255,255,255,.85);
+            font-style: normal;
+        }
+
+        .footer-copy {
+            color: rgba(255,255,255,.28);
+            font-size: 11.5px;
+            letter-spacing: 0.1em;
+            text-align: right;
+        }
+
+        /* ══════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════ */
+        @media (max-width: 768px) {
+            .header-inner {
+                grid-template-columns: 1fr;
+                padding: 12px 0;
+                gap: 10px;
+            }
+
+            nav {
+                padding: 0;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                border-top: 1px solid rgba(255,255,255,.08);
+                padding-top: 8px;
+            }
+
+            nav a { padding: 7px 12px; font-size: 12px; }
+
+            .header-auth {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid rgba(255,255,255,.08);
+                padding-top: 10px;
+            }
+
+            .auth-card, .form-card {
+                padding: 32px 24px 36px;
+            }
+
+            .footer-inner { flex-direction: column; gap: 6px; }
+            .footer-copy { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+
+            <!-- Branding -->
+            <div class="site-branding">
+                <a href="/" class="brand-wrap">
+                    <!-- Inline SVG logo mark (shown alongside / as fallback for the static image) -->
+                    <div class="logo-mark">
+                        <img src="{% static 'images/aivroll-logo.png' %}" alt="Aivroll logo"
+                             class="site-logo"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                        <!-- SVG fallback / companion mark -->
+                        <svg style="display:none" width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect width="46" height="46" rx="8" fill="#f5b301"/>
+                            <!-- Stylised dove / peace figure -->
+                            <path d="M23 10 C17 10 12 15 12 21 C12 26.5 15.5 31 21 33 L21 36 L25 36 L25 33 C30.5 31 34 26.5 34 21 C34 15 29 10 23 10Z" fill="#1a2e5a"/>
+                            <circle cx="23" cy="19" r="4" fill="#f5b301"/>
+                            <path d="M18 25 Q23 28 28 25" stroke="#f5b301" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                            <!-- Olive branch suggestion -->
+                            <path d="M28 21 Q32 18 34 14" stroke="#1a2e5a" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".0"/>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-name">Aivroll</span>
+                        <span class="site-tagline">Support &middot; Solidarity &middot; Action</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <nav>
+                <a href="/">Home</a>
+                <a href="/reviews/">Reviews</a>
+                <a href="/reviews/create/">Send Review</a>
+            </nav>
+
+            <!-- Auth strip -->
+            <div class="header-auth">
+                {% if user.is_authenticated %}
+                    <span>Hi, {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-btn">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link-plain">Login</a>
+                    <a href="{% url 'signup' %}" class="nav-btn nav-btn-cta">Create Account</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </header>
+    <div class="accent-bar"></div>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <strong>People Against Poverty &amp; War</strong> — a community built on solidarity
+            </div>
+            <div class="footer-copy">
+                &copy; {% now "Y" %} Aivroll &nbsp;&middot;&nbsp; All rights reserved
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
